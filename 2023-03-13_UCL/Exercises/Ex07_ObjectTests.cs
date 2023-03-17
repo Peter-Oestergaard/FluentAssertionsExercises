@@ -14,16 +14,13 @@ namespace Exercises
             // without taking the 'Id' property into account.
 
             // Arrange
-            var expectedInstance = new Machine
-            {
-                Name = "HAL"
-            };
+            var expectedInstance = new Machine {Name = "HAL"};
 
             // Act
             Machine instance = GetInstance();
 
             // Assert
-            throw new NotImplementedException();
+            instance.Should().BeEquivalentTo(expectedInstance, options => options.Excluding(c => c.Id));
         }
 
         [Fact]
@@ -40,7 +37,7 @@ namespace Exercises
             ISuperComputer computer = GetSuperComputer();
 
             // Assert
-            throw new NotImplementedException();
+            computer.Should().NotBeEquivalentTo(expected, options => options.RespectingRuntimeTypes());
         }
 
         [Fact]
@@ -51,6 +48,7 @@ namespace Exercises
             {
                 // Fill out the anonymous type, to match
                 // Inner.Inner.MyProperty = 42
+                Inner = new {Inner = new {MyProperty = 42}}
             };
 
             // Act
@@ -67,22 +65,19 @@ namespace Exercises
             // but excluding all fields except 'name'.
 
             // Arrange
-            var expected = new AnnoyingClass
-            {
-                name = "John"
-            };
+            var expected = new AnnoyingClass {name = "John"};
 
             // Act
             AnnoyingClass result = GetResult();
 
             // Assert
-            throw new NotImplementedException();
+            result.Should().BeEquivalentTo(expected, options => options.Including(c => c.name));
         }
 
         [Fact]
         public void Using_WhenTypeIs()
         {
-            // The model and its mapped version should be equivalent 
+            // The model and its mapped version should be equivalent
             // and any DateTime may vary up to 1 second.
 
             // Arrange
@@ -92,13 +87,15 @@ namespace Exercises
             object mappedModel = ModelMapper.Map(dasModel);
 
             // Assert
-            throw new NotImplementedException();
+            mappedModel.Should().BeEquivalentTo(dasModel,
+                options => options.Using<DateTime>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation, 1.Seconds()))
+                    .WhenTypeIs<DateTime>());
         }
 
         [Fact]
         public void Using_When()
         {
-            // The model and its mapped version should be equivalent 
+            // The model and its mapped version should be equivalent
             // and the 'Created' property may vary up to 1 second.
             // As 'mappedModel' is non-generic, we cannot use a predicate
             // as a path to 'Created'
@@ -110,13 +107,16 @@ namespace Exercises
             object mappedModel = ModelMapper.Map(dasModel);
 
             // Assert
-            throw new NotImplementedException();
+            mappedModel.Should().BeEquivalentTo(dasModel,
+                options => options.Using<DateTime>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation, 1.Seconds()))
+                    .When(i => i.Path.EndsWith("Created")));
         }
 
         #region Helpers
-        private AnnoyingClass GetResult() => new() { id = new Random().Next(), name = "John" };
 
-        private Person GetPerson() => new() { Name = "John" };
+        private AnnoyingClass GetResult() => new() {id = new Random().Next(), name = "John"};
+
+        private Person GetPerson() => new() {Name = "John"};
 
         private class Person
         {
@@ -127,7 +127,7 @@ namespace Exercises
             public override int GetHashCode() => 0;
         }
 
-        private Machine GetInstance() => new() { Name = "HAL", Id = 9000 };
+        private Machine GetInstance() => new() {Name = "HAL", Id = 9000};
 
         private class Machine
         {
@@ -170,14 +170,7 @@ namespace Exercises
             return new()
             {
                 MyProperty = random.Next(),
-                Inner = new()
-                {
-                    MyProperty = random.Next(),
-                    Inner = new()
-                    {
-                        MyProperty = 42
-                    }
-                }
+                Inner = new() {MyProperty = random.Next(), Inner = new() {MyProperty = 42}}
             };
         }
 
@@ -201,13 +194,14 @@ namespace Exercises
         private static class ModelMapper
         {
             public static Model Map(ModelDto m) =>
-                new() { Created = m.Created + TimeSpan.FromMilliseconds(new Random().Next(1, 42)) };
+                new() {Created = m.Created + TimeSpan.FromMilliseconds(new Random().Next(1, 42))};
 
             public static ModelDto Map(Model m) =>
-                new() { Created = m.Created + TimeSpan.FromMilliseconds(new Random().Next(1, 42)) };
+                new() {Created = m.Created + TimeSpan.FromMilliseconds(new Random().Next(1, 42))};
         }
 
-        private static Model GetModel() => new() { Created = 19.May(1978) };
+        private static Model GetModel() => new() {Created = 19.May(1978)};
+
         #endregion
     }
 }
