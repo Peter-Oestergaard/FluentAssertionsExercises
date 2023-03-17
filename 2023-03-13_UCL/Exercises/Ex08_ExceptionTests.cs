@@ -19,7 +19,7 @@ namespace Exercises
             Action act = () => subject.DoesThrow();
 
             // Assert
-            throw new NotImplementedException();
+            act.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
@@ -32,15 +32,19 @@ namespace Exercises
 
             // Arrange
             var subject = new Thrower();
+            string foobarMessage = "*foobar*";
+            string darkSideMessage = "*Dark Side*";
 
             // Act
             Action act = () => subject.DoesThrow();
 
             // Assert
-            throw new NotImplementedException();
+            act.Should().Throw<InvalidOperationException>().WithMessage(foobarMessage)
+                .WithInnerException<DivideByZeroException>().WithMessage(darkSideMessage);
         }
 
         #region Helpers
+
         private class Thrower
         {
             [DebuggerNonUserCode]
@@ -58,6 +62,7 @@ namespace Exercises
 
             public Task<int> DoesNotThrowAsync() => Task.FromResult(DoesNotThrow());
         }
+
         #endregion
     }
 }
