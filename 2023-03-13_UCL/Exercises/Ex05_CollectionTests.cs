@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -15,7 +16,7 @@ namespace Exercises
             var result = new[] { 41, 42, 43 };
 
             // Assert
-            throw new NotImplementedException();
+            result.Should().BeInAscendingOrder();
         }
 
         [Fact]
@@ -31,7 +32,7 @@ namespace Exercises
             var result = new[] { 41, 42, 43 };
 
             // Assert
-            throw new NotImplementedException();
+            result.Should().Equal(expected);
         }
 
         [Fact]
@@ -53,7 +54,7 @@ namespace Exercises
             Person[] result = GetPersons();
 
             // Assert
-            throw new NotImplementedException();
+            result.Select(p => p.Name).Should().Equal(expected.Select(p => p.Name));
         }
 
         [Fact]
@@ -66,7 +67,7 @@ namespace Exercises
             object[] objects = GetObjects();
 
             // Assert
-            throw new NotImplementedException();
+            objects.Should().HaveCount(expectedCount);
         }
 
         [Fact]
@@ -84,7 +85,10 @@ namespace Exercises
             object[] objects = GetObjects();
 
             // Assert
-            throw new NotImplementedException();
+            objects.Should().SatisfyRespectively(
+                first => first.Should().BeOfType<string>().Which.Should().HaveLength(expectedLength),
+                second => second.Should().BeOfType<int>().Which.Equals(expectedNumber)
+            );
         }
 
         [Fact]
@@ -97,7 +101,7 @@ namespace Exercises
             object[] objects = GetRandomObjects();
 
             // Assert
-            throw new NotImplementedException();
+            objects.Should().Contain(expected);
         }
 
         [Fact]
@@ -110,7 +114,7 @@ namespace Exercises
             object[] objects = GetObjects();
 
             // Assert
-            throw new NotImplementedException();
+            objects.Should().ContainInOrder(expectedNumbers);
         }
 
         #region Helpers
