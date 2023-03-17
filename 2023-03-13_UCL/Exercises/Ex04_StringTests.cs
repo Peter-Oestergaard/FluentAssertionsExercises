@@ -16,7 +16,7 @@ namespace Exercises
             string starSign = person.GetStarSign();
 
             // Assert
-            throw new NotImplementedException();
+            starSign.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace Exercises
             string frameworkName = GetTestFramework();
 
             // Assert
-            throw new NotImplementedException();
+            frameworkName.Should().BeEquivalentTo(expectedFrameworkName);
         }
 
         [Fact]
@@ -42,7 +42,10 @@ namespace Exercises
             string[] nephews = GetNephewsOfDonaldDuck();
 
             // Assert
-            throw new NotImplementedException();
+            // If 'a' means exactly one:
+            nephews.Should().ContainSingle(e => e == expectedNephew);
+            // If 'a' means at least one:
+            nephews.Should().Contain(expectedNephew);
         }
 
         [Fact]
@@ -55,7 +58,7 @@ namespace Exercises
             string alphabet = GetDanishAlphabeth();
 
             // Assert
-            throw new NotImplementedException();
+            alphabet.Should().HaveLength(expectedLength);
         }
 
         [Fact]
@@ -65,7 +68,14 @@ namespace Exercises
             string errorMessage = GetErrorMessage();
 
             // Assert
-            throw new NotImplementedException();
+            // Can we assume the words in errorMessage is always separated with spaces?
+            errorMessage.Split(' ').Should().ContainInOrder("Foo", "Bar");
+            // If not, we can do this instead:
+            new[]
+            {
+                errorMessage.IndexOf("Foo", StringComparison.Ordinal),
+                errorMessage.IndexOf("Bar", StringComparison.Ordinal)
+            }.Should().BeInAscendingOrder();
         }
 
         #region Helpers
