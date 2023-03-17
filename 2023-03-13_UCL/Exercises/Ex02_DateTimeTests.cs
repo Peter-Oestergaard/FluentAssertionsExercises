@@ -18,7 +18,7 @@ namespace Exercises
             DateTime date = EasterSunday();
 
             // Assert
-            throw new NotImplementedException();
+            date.Should().BeSameDateAs(expected);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace Exercises
             DateTime date = StartOfThisPresentation();
 
             // Assert
-            throw new NotImplementedException();
+            date.Should().BeWithin(5.Minutes());
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Exercises
             // See https://fluentassertions.com/datetimespans/ for examples
 
             // Arrange
-            DateTimeOffset expectedEndOfDst = default;
+            DateTimeOffset expectedEndOfDst = 29.October(2023).At(3.Hours()).WithOffset(2.Hours());
 
             // Act
             DateTimeOffset date = DaylightSavingTimeEnd();
